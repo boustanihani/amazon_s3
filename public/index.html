@@ -27,8 +27,8 @@
     <br>
 
     <br>
-    <div id="progress" style="background-color:orange">
-        <div id="progressbar" style="background-color:green;width:0%;height:1em"></div>
+    <div style="background-color:orange">
+        <div id="progress" style="background-color:green;width:0%;height:1em"></div>
     </div>
 
     <script>
@@ -40,7 +40,7 @@
 
                     console.log('add:');
 
-                    $('#progressbar').css(
+                    $('#progress').css(
                         'width',
                         '0%'
                     );
@@ -71,7 +71,7 @@
                 progressall: function(e, data) {
                     var progress = parseInt(data.loaded / data.total * 100, 10);
                     console.log('progress: ' + progress);
-                    $('#progressbar').css(
+                    $('#progress').css(
                         'width',
                         progress + '%'
                     );

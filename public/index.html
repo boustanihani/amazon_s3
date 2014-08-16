@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Force latest IE rendering engine or ChromeFrame if installed -->
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><![endif]-->
+
+    <meta charset="utf-8">
+
+    <!--https://github.com/blueimp/jQuery-File-Upload/blob/master/basic.html-->
+    <title>jQuery File Upload Demo - Basic version</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.js"></script>
+
+    <script src="//cdn.rawgit.com/blueimp/jQuery-File-Upload/9.7.0/js/vendor/jquery.ui.widget.js"></script>
+    <script src="//cdn.rawgit.com/blueimp/jQuery-File-Upload/9.7.0/js/jquery.iframe-transport.js"></script>
+    <script src="//cdn.rawgit.com/blueimp/jQuery-File-Upload/9.7.0/js/jquery.fileupload.js"></script>
+
+</head>
+
+<body>
+
+    <br>
+    <input id="fileupload" type="file" name="files[]">
+    <br>
+
+    <br>
+    <div id="progress" style="background-color:orange">
+        <div id="progressbar" style="background-color:green;width:0%;height:1em"></div>
+    </div>
+
+    <script>
+        $(function() {
+
+            $('#fileupload').fileupload({
+
+                add: function(e, data) {
+
+                    console.log('add:');
+
+                    $('#progressbar').css(
+                        'width',
+                        '0%'
+                    );
+
+                    var file = data.originalFiles[0];
+                    console.log(JSON.stringify(file, null, 4));
+
+                    $.ajax({
+
+                            type: "POST",
+                            url: "/amazon_s3",
+
+                            data: {
+                                "lastModifiedDate": file.lastModifiedDate,
+                                "name": file.name,
+                                "type": file.type,
+                                "size": file.size
+                            }
+                        })
+                        .done(function(signedUrl) {
+                            console.log('signedUrl: ' + signedUrl);
+                            data.url = signedUrl;
+                            data.submit();
+                        });
+
+                },
+
+                progressall: function(e, data) {
+                    var progress = parseInt(data.loaded / data.total * 100, 10);
+                    console.log('progress: ' + progress);
+                    $('#progressbar').css(
+                        'width',
+                        progress + '%'
+                    );
+                },
+
+                done: function(e, data) {
+                    console.log('done:');
+                    alert('Upload Success!');
+                },
+
+                fail: function(e, data) {
+                    console.log('fail:');
+                    alert('Error: ' + data.errorThrown + "\n" + data.jqXHR.responseText);
+                },
+
+                always: function(e, data) {
+                    console.log('always:');
+                    console.log('errorThrown: ' + data.errorThrown);
+                    console.log('jqXHR.responseText: ' + data.jqXHR.responseText);
+                    console.log(data);
+                }
+
+            });
+        });
+    </script>
+
+</body>
+
+</html>

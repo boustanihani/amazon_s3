@@ -19,6 +19,8 @@ var s3 = new AWS.S3();
 
 // List all buckets...
 s3.listBuckets(function(err, data) {
+    if (err) return console.error(err);
+
     console.log("***************************************************************");
     for (var index in data.Buckets) {
         var bucket = data.Buckets[index];
@@ -36,7 +38,7 @@ router.post('/', function(req, res) {
     var params = {
 
         Bucket: 'mybucket', // Choose bucket
-        
+
         Key: 'surl' + new Date().getTime(),
 
         //Expires: 120,

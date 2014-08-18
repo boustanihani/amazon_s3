@@ -32,6 +32,14 @@
     </div>
 
     <script>
+        var _isXHRUpload = function() {
+            // http://stackoverflow.com/questions/6767887
+            // https://github.com/blueimp/jQuery-File-Upload/blob/9.7.0/js/jquery.fileupload.js#L288
+            var xhr = $.support.xhrFileUpload || $.support.xhrFormDataFileUpload;
+            console.log('_isXHRUpload: ' + xhr);
+            return xhr;
+        };
+
         $(function() {
 
             $('#fileupload').fileupload({
@@ -78,6 +86,14 @@
                         'name': 'key',
                         'value': file.name
                     });
+                    extra_params.push({
+                        'name': 'Content-Type',
+                        'value': file.type
+                    });
+                    extra_params.push({
+                        'name': 'acl',
+                        'value': 'private'
+                    });
 
                     var prefix = location.protocol + '//' + location.host + '/';
                     console.log('prefix: ' + prefix);
@@ -85,11 +101,11 @@
                     // https://github.com/blueimp/jQuery-File-Upload/issues/3000
                     extra_params.push({
                         'name': 'redirect',
-                        'value': $.support.xhrFormDataFileUpload ? '' : (prefix + 'iframe_upload_catcher.html')
+                        'value': _isXHRUpload() ? '' : (prefix + 'iframe_upload_catcher.html')
                     });
                     data.formData = extra_params;
 
-                    data.url = "https://wbtemp.s3-eu-west-1.amazonaws.com/";
+                    data.url = "https://wolfsblut-1.s3-eu-west-1.amazonaws.com/";
                     data.submit();
 
                 },

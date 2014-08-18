@@ -18,7 +18,7 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/amazon_s3', require('./routes/amazon_s3'));
+//app.use('/amazon_s3', require('./routes/amazon_s3'));
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {

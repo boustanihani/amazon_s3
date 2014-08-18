@@ -18,7 +18,7 @@ var s3Policy = {
 		["starts-with", "$Content-Type", ""],
 		["content-length-range", 0, 1048576]
 	]
-};
+}
 
 var base64Policy = Buffer(JSON.stringify(s3Policy), "utf-8").toString("base64");
 var signature = crypto.createHmac("sha1", awscredentials.secretAccessKey).update(new Buffer(base64Policy, "utf-8")).digest("base64");
